@@ -40,8 +40,8 @@ We need an api for tracking empoyees in multiple organizations. Each `organizati
     - token is valid and is connected to user
 - authorization
 - permissions
-  >
-      HOW TO
+>
+    HOW TO
 - pipenv shell
 - pipenv install
 - cd main
