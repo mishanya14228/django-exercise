@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Organization, Department, Employee
+from .models import Organization, Department, Employee, Status
 
 # Register your models here.
 
@@ -22,7 +22,15 @@ admin.site.register(Department, MyDepartmentAdmin)
 
 class MyEmployeeAdmin(admin.ModelAdmin):
     model = Employee
-    list_display = ('emp_name', 'department', 'status')
+    list_display = ('emp_name', 'department')
 
 
 admin.site.register(Employee, MyEmployeeAdmin)
+
+
+class MyStatusAdmin(admin.ModelAdmin):
+    model = Status
+    list_display = ('status_text',)
+
+
+admin.site.register(Status, MyStatusAdmin)
