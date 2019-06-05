@@ -26,7 +26,6 @@ class Department(models.Model):
 
 
 class Status(models.Model):
-    # text_status = models.ForeignKey(Employee, on_delete=models.CASCADE)
     status_text = models.CharField(max_length=100)
 
     def slug(self):
@@ -40,24 +39,9 @@ class Employee(models.Model):
     emp_name = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
-    '''
-    status_choices = (
-        ('1', 'Manager'),
-        ('2', 'Developer'),
-        ('3', 'Boss')
-    )
-    '''
-    # status_choices =
-    # status = models.CharField(max_length=1, choices=Status.objects.all())
 
     def slug(self):
         return slugify(self.emp_name)
 
     def __str__(self):
         return self.emp_name
-    '''
-    def choices(self):
-        if not hasattr(self, '_choices'):
-            self._choices = self.status_set.all()
-        return self._choices
-    '''
