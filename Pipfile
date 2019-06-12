@@ -8,6 +8,10 @@ django = "*"
 djangorestframework = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
+drf-yasg = "*"
+coreapi = "*"
+pyyaml = "*"
+django-filter = "*"
 
 [dev-packages]
 

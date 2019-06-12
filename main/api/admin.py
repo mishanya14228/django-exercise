@@ -22,7 +22,7 @@ admin.site.register(Department, MyDepartmentAdmin)
 
 class MyEmployeeAdmin(admin.ModelAdmin):
     model = Employee
-    list_display = ('emp_name', 'department')
+    list_display = ('emp_name', 'department', 'status')
 
 
 admin.site.register(Employee, MyEmployeeAdmin)
