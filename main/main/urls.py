@@ -40,5 +40,6 @@ urlpatterns = [
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('schema/', schema_view),  # for the schema
     path('admin/', admin.site.urls),
+    path('api/v1/', include('drfpasswordless.urls')),  # for passwordless
     path('api/v1/', include('api.urls')),  # Added url for api app
 ]

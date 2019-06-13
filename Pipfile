@@ -12,6 +12,7 @@ drf-yasg = "*"
 coreapi = "*"
 pyyaml = "*"
 django-filter = "*"
+drfpasswordless = "*"
 
 [dev-packages]
 

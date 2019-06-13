@@ -33,8 +33,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'drf_yasg',
-    'django_filters',
+    'django_filters',  # for filtering
     'rest_framework',  # added DRF
+    'rest_framework.authtoken',  # for token
+    'drfpasswordless',  # for passwordless
     'api.apps.ApiConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -114,7 +116,25 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
 }
+
+
+PASSWORDLESS_AUTH = {
+   'PASSWORDLESS_AUTH_TYPES': ['EMAIL', 'Mobile'],
+}
+
+# AUTH_USER_MODEL = 'users.CustomUser' # new
+
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 2525
+# EMAIL_HOST_USER = ''
+#EMAIL_HOST_PASSWORD = ''
+# EMAIL_USE_TLS = False
+# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 
 
 # Internationalization
