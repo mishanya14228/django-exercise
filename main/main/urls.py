@@ -20,26 +20,41 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from django.conf.urls import url
 
-
-schema_view = get_schema_view(
-   openapi.Info(
-      title="Django Exercise API",
-      default_version='v1',
-      description="Docs for Django Exercise",
-      terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="contact@djangoexercise.local"),
-      license=openapi.License(name="BSD License"),
-   ),
-   public=True,
-   permission_classes=(permissions.AllowAny,),
+from drfpasswordless.views import (
+    ObtainEmailCallbackToken,
+    ObtainAuthTokenFromCallbackToken,
 )
 
+
+schema_view = get_schema_view(
+    openapi.Info(
+       title="Django Exercise API",
+       default_version='v1',
+       description="Docs for Django Exercise",
+       terms_of_service="https://www.google.com/policies/terms/",
+       contact=openapi.Contact(email="contact@djangoexercise.local"),
+       license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
+
+drfpasswordless_patterns = [
+    path('callback/auth/', ObtainAuthTokenFromCallbackToken.as_view(),
+         name='auth_callback'),
+    path('auth/email/', ObtainEmailCallbackToken.as_view(), name='auth_email'),
+]
+
 urlpatterns = [
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    url(r'^swagger(?P<format>\.json|\.yaml)$',
+        schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0),
+        name='schema-swagger-ui'),
+    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0),
+        name='schema-redoc'),
     path('schema/', schema_view),  # for the schema
     path('admin/', admin.site.urls),
-    path('api/v1/', include('drfpasswordless.urls')),  # for passwordless
+    path('api/v1/', include('django.contrib.auth.urls')),  # added auth urls
+    path('api/v1/', include(drfpasswordless_patterns)),  # for passwordless
     path('api/v1/', include('api.urls')),  # Added url for api app
 ]

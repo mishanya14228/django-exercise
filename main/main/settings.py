@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-import psycopg2
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'drf_yasg',
+    'drf_yasg',  # for a nice schema
     'django_filters',  # for filtering
     'rest_framework',  # added DRF
     'rest_framework.authtoken',  # for token
@@ -113,43 +112,49 @@ AUTH_PASSWORD_VALIDATORS = [
 # Added permissions to make requests to REST API
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.AllowAny',
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ),
 }
 
+# To prevent receiving GET when try DELETE without slash
+APPEND_SLASH = False
 
+# Settings for drfpasswordless
 PASSWORDLESS_AUTH = {
-   'PASSWORDLESS_AUTH_TYPES': ['EMAIL', 'Mobile'],
+   'PASSWORDLESS_AUTH_TYPES': ['EMAIL'],
+   'PASSWORDLESS_EMAIL_NOREPLY_ADDRESS': 'noreply@test.test',
 }
 
-# AUTH_USER_MODEL = 'users.CustomUser' # new
+# Change User to CustomUser
+AUTH_USER_MODEL = 'api.CustomUser'  # new
 
+# Settings for SMTP server
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 2525
-# EMAIL_HOST_USER = ''
-#EMAIL_HOST_PASSWORD = ''
-# EMAIL_USE_TLS = False
-# EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
-# EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+# Set backend for SMTP server
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
+# Set timezone to Kyiv
+TIME_ZONE = 'Etc/GMT-3'
 
 USE_I18N = True
 
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

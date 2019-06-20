@@ -1,8 +1,15 @@
 from rest_framework import serializers
-from api.models import Organization, Department, Employee, Status
+from api.models import Organization, Department, Employee, Status, CustomUser
 
 
 # Create your serializers here.
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
 
 
 class OrganizationSerializer(serializers.ModelSerializer):
@@ -17,8 +24,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return Department.objects.filter(organization=obj).count()
 
     def get_emp_count(self, obj):
-        dep = Department.objects.filter(organization=obj)
-        return dep.prefetch_related("departments", "departments__employees").count()
+        return Employee.objects.filter(department__organization=obj).count()
 
 
 class DescriptionOrganizationSerializer(serializers.ModelSerializer):
@@ -30,11 +36,17 @@ class DescriptionOrganizationSerializer(serializers.ModelSerializer):
 
 class DepartmentSerializer(serializers.ModelSerializer):
     emp_count_for_dep = serializers.SerializerMethodField()
-    organization = DescriptionOrganizationSerializer()
 
     class Meta:
         model = Department
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['organization'] = DescriptionOrganizationSerializer(
+                                  instance.organization
+                              ).data
+        return rep
 
 
     def get_emp_count_for_dep(self, obj):
@@ -42,13 +54,13 @@ class DepartmentSerializer(serializers.ModelSerializer):
 
 
 class StatusSerializer(serializers.ModelSerializer):
-    status_count = serializers.SerializerMethodField()
+    emp_count_for_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Status
         fields = '__all__'
 
-    def get_status_count(self, obj):
+    def get_emp_count_for_status(self, obj):
         return Employee.objects.filter(status=obj).count()
 
 
@@ -67,9 +79,15 @@ class DescriptionStatusSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    department = DescriptionDepartmentSerializer()
-    status = DescriptionStatusSerializer()
 
     class Meta:
         model = Employee
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['department'] = DescriptionDepartmentSerializer(
+                                instance.department
+                            ).data
+        rep['status'] = DescriptionStatusSerializer(instance.status).data
+        return rep
